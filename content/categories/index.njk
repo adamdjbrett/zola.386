@@ -1,0 +1,24 @@
+---
+title: Categories
+permalink: /categories/
+---
+{% extends "layouts/base.njk" %}
+
+{% block title %}{{ site.title }} - {{ site.labels.categories }}{% endblock title %}
+
+{% block header %}
+<div class="page-header">
+  <h1>{{ site.labels.categories }}</h1>
+</div>
+{% endblock header %}
+
+{% block main %}
+<ul>
+  {% for category in collections.categoryList %}
+    {% set categoryPosts = collections.posts | postsByCategory(category) %}
+    <li>
+      <a href="/categories/{{ category | slugify }}/">{{ category }}</a> ({{ categoryPosts | length }})
+    </li>
+  {% endfor %}
+</ul>
+{% endblock main %}

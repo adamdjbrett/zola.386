@@ -1,0 +1,16 @@
+---
+pagination:
+  data: collections.posts
+  size: 20
+  alias: postsPage
+permalink: "{% if pagination.pageNumber > 0 %}/page/{{ pagination.pageNumber + 1 }}/{% else %}/{% endif %}"
+---
+{% extends "layouts/base.njk" %}
+{% import "partials/macros.njk" as macro %}
+
+{% block main %}
+  {% for post in postsPage %}
+    {{ macro.post_max(post, site) }}
+  {% endfor %}
+  {{ macro.paginator(pagination) }}
+{% endblock main %}

@@ -1,0 +1,25 @@
+---
+pagination:
+  data: collections.categoryList
+  size: 1
+  alias: category
+permalink: "/categories/{{ category | slugify }}/"
+---
+{% extends "layouts/base.njk" %}
+{% import "partials/macros.njk" as macro %}
+
+{% block title %}{{ site.title }} - {{ site.labels.categories }}{% endblock title %}
+
+{% block header %}
+<div class="page-header">
+  <h1>{{ site.labels.category }}: {{ category }}</h1>
+</div>
+{% endblock header %}
+
+{% block main %}
+<ul>
+{% for post in collections.posts | postsByCategory(category) %}
+  <li>{{ macro.post_min(post) }}</li>
+{% endfor %}
+</ul>
+{% endblock main %}

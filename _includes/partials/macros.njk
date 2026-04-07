@@ -1,0 +1,79 @@
+{% macro post_max(post, site) %}
+<div>
+  <h1><a href="{{ post.url }}">{{ post.data.title }}</a></h1>
+  <p>{{ post.data.description or "" }}</p>
+  <dl class="dl-horizontal">
+    <dt>{{ site.labels.date }}</dt>
+    <dd>{{ post.date | readableDate("yyyy-LL-dd") }}</dd>
+
+    <dt>{{ site.labels.author }}</dt>
+    <dd>{{ post.data.author or site.author }}</dd>
+
+    {% if post.data.categories and post.data.categories.length %}
+    <dt>{{ site.labels.taxonomy }}</dt>
+    <dd>
+      <a href="/categories/{{ post.data.categories[0] | slugify }}/">{{ post.data.categories[0] }}</a>
+      {% if post.data.tags and post.data.tags.length %}
+      |
+      {% for tag in post.data.tags %}
+      <a href="/tags/{{ tag | slugify }}/">{{ tag }}</a>{% if not loop.last %},{% endif %}
+      {% endfor %}
+      {% endif %}
+    </dd>
+    {% elseif post.data.tags and post.data.tags.length %}
+    <dt>{{ site.labels.taxonomy }}</dt>
+    <dd>
+      {% for tag in post.data.tags %}
+      <a href="/tags/{{ tag | slugify }}/">{{ tag }}</a>{% if not loop.last %},{% endif %}
+      {% endfor %}
+    </dd>
+    {% endif %}
+
+    <dt>{{ site.labels.reading }}</dt>
+    <dd>{{ post.templateContent | readingTime }}'</dd>
+  </dl>
+  <p>
+    <a href="{{ post.url }}" class="btn btn-info" role="button">{{ site.labels.readMore }}</a>
+  </p>
+  <hr class="soften">
+  <p></p>
+</div>
+{% endmacro %}
+
+{% macro post_min(post) %}
+<a href="{{ post.url }}">{{ post.date | readableDate("yyyy-LL-dd") }} | {{ post.data.title }}</a>
+{% endmacro %}
+
+{% macro paginator(pagination) %}
+{% if pagination and pagination.pages and pagination.pages.length > 1 %}
+<div class="pagination pagination-centered">
+  <ul>
+    {% if pagination.pageNumber > 0 %}
+    <li><a href="{{ pagination.href.first }}">&larrb;</a></li>
+    {% else %}
+    <li class="disabled"><a href="{{ pagination.href.first }}">&larrb;</a></li>
+    {% endif %}
+
+    {% if pagination.href.previous %}
+    <li><a href="{{ pagination.href.previous }}">&larr;</a></li>
+    {% else %}
+    <li class="disabled"><a href="#">&larr;</a></li>
+    {% endif %}
+
+    <li class="disabled"><a href="#">{{ pagination.pageNumber + 1 }}/{{ pagination.pages.length }}</a></li>
+
+    {% if pagination.href.next %}
+    <li><a href="{{ pagination.href.next }}">&rarr;</a></li>
+    {% else %}
+    <li class="disabled"><a href="#">&rarr;</a></li>
+    {% endif %}
+
+    {% if pagination.pageNumber + 1 < pagination.pages.length %}
+    <li><a href="{{ pagination.href.last }}">&rarrb;</a></li>
+    {% else %}
+    <li class="disabled"><a href="{{ pagination.href.last }}">&rarrb;</a></li>
+    {% endif %}
+  </ul>
+</div>
+{% endif %}
+{% endmacro %}

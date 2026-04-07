@@ -1,7 +1,3 @@
-# zola trash
-zola
-public
-static/processed_images
-
-# os trash
+node_modules
+_site
 .DS_Store

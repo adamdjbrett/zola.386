@@ -1,0 +1,25 @@
+---
+pagination:
+  data: collections.tagList
+  size: 1
+  alias: tag
+permalink: "/tags/{{ tag | slugify }}/"
+---
+{% extends "layouts/base.njk" %}
+{% import "partials/macros.njk" as macro %}
+
+{% block title %}{{ site.title }} - {{ site.labels.tags }}{% endblock title %}
+
+{% block header %}
+<div class="page-header">
+  <h1>{{ site.labels.tag }}: {{ tag }}</h1>
+</div>
+{% endblock header %}
+
+{% block main %}
+<ul>
+{% for post in collections.posts | postsByTag(tag) %}
+  <li>{{ macro.post_min(post) }}</li>
+{% endfor %}
+</ul>
+{% endblock main %}

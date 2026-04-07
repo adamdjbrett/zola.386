@@ -1,0 +1,16 @@
+{% extends "layouts/base.njk" %}
+
+{% block title %}{{ site.title }} - {{ title }}{% endblock title %}
+{% block ogtitle %}{{ site.title }} - {{ title }}{% endblock ogtitle %}
+{% block ogdesc %}{{ description or site.description }}{% endblock ogdesc %}
+{% block ogurl %}{{ (page.url or "/") | absoluteUrl(site.url) }}{% endblock ogurl %}
+
+{% block header %}
+<div class="page-header">
+  <h1>{{ title }}</h1>
+</div>
+{% endblock header %}
+
+{% block main %}
+{{ content | safe }}
+{% endblock main %}

@@ -1,0 +1,24 @@
+---
+title: Tags
+permalink: /tags/
+---
+{% extends "layouts/base.njk" %}
+
+{% block title %}{{ site.title }} - {{ site.labels.tags }}{% endblock title %}
+
+{% block header %}
+<div class="page-header">
+  <h1>{{ site.labels.tags }}</h1>
+</div>
+{% endblock header %}
+
+{% block main %}
+<ul>
+  {% for tag in collections.tagList %}
+    {% set tagged = collections.posts | postsByTag(tag) %}
+    <li>
+      <a href="/tags/{{ tag | slugify }}/">{{ tag }}</a> ({{ tagged | length }})
+    </li>
+  {% endfor %}
+</ul>
+{% endblock main %}

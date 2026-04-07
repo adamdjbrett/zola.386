@@ -1,0 +1,42 @@
+{% extends "layouts/base.njk" %}
+
+{% block title %}{{ site.title }} - {{ title }}{% endblock title %}
+{% block ogtitle %}{{ site.title }} - {{ title }}{% endblock ogtitle %}
+{% block ogdesc %}{{ description or site.description }}{% endblock ogdesc %}
+{% block ogurl %}{{ (page.url or '/') | absoluteUrl(site.url) }}{% endblock ogurl %}
+{% block ogimg %}{% if image %}{{ image | absoluteUrl(site.url) }}{% else %}{{ site.image }}{% endif %}{% endblock ogimg %}
+
+{% block breadcrumb %}
+<p class="lead">
+  <span>&gt;&gt;</span>
+  <a href="{{ site.url }}">Home</a>
+  {% if categories and categories.length %}
+  <span class="divider">/</span>
+  <a class="category" href="/categories/{{ categories[0] | slugify }}/">{{ categories[0] }}</a>
+  {% endif %}
+  {% if tags and tags.length %}
+  <span class="divider">/</span>
+  {% for tag in tags %}
+  <a href="/tags/{{ tag | slugify }}/">{{ tag }}</a>{% if not loop.last %},{% endif %}
+  {% endfor %}
+  {% endif %}
+</p>
+{% endblock breadcrumb %}
+
+{% block header %}
+<div class="page-header">
+  <h1>{{ title }}</h1>
+</div>
+{% endblock header %}
+
+{% block meta %}
+<p class="text-right">
+  <span class="label label-success">&becaus; {{ author or site.author }}</span>
+  <span class="label label-success">&there4; {{ date | readableDate("yyyy-LL-dd") }}</span>
+  <span class="label label-success">&infin; {{ content | readingTime }}'</span>
+</p>
+{% endblock meta %}
+
+{% block main %}
+{{ content | safe }}
+{% endblock main %}

@@ -1,0 +1,179 @@
+{% import "partials/macros.njk" as macro %}
+<!DOCTYPE html>
+<html lang="{{ language or site.language }}" itemscope itemtype="http://schema.org/Blog">
+<head>
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1">
+
+  {% for styleHref in site.styles %}
+  <link rel="stylesheet" href="{{ styleHref }}">
+  {% endfor %}
+
+  <title>{% block title %}{{ site.title }}{% endblock title %}</title>
+
+  {% if site.generateRss %}
+  <link rel="alternate" type="application/rss+xml" title="RSS" href="/rss.xml">
+  {% endif %}
+
+  <meta name="description" itemprop="about" content="{{ site.description }}">
+  <meta name="keywords" itemprop="keywords" content="{{ site.keywords }}">
+  <meta name="author" itemprop="author" content="{{ site.author }}">
+  <meta itemprop="headline" content="{{ site.title }}">
+  <meta itemprop="copyrightYear" content="{{ site.year }}">
+
+  <link rel="icon" href="/images/favicon.ico" type="image/x-icon">
+  <link rel="apple-touch-icon" sizes="57x57" href="/images/apple-icon-57x57.png">
+  <link rel="apple-touch-icon" sizes="60x60" href="/images/apple-icon-60x60.png">
+  <link rel="apple-touch-icon" sizes="72x72" href="/images/apple-icon-72x72.png">
+  <link rel="apple-touch-icon" sizes="76x76" href="/images/apple-icon-76x76.png">
+  <link rel="apple-touch-icon" sizes="114x114" href="/images/apple-icon-114x114.png">
+  <link rel="apple-touch-icon" sizes="120x120" href="/images/apple-icon-120x120.png">
+  <link rel="apple-touch-icon" sizes="144x144" href="/images/apple-icon-144x144.png">
+  <link rel="apple-touch-icon" sizes="152x152" href="/images/apple-icon-152x152.png">
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-icon-180x180.png">
+  <link rel="icon" type="image/png" sizes="192x192" href="/images/android-icon-192x192.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32.png">
+  <link rel="icon" type="image/png" sizes="96x96" href="/images/favicon-96x96.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16.png">
+  <link rel="manifest" href="/images/manifest.json">
+  <meta name="msapplication-TileColor" content="{{ site.themeColor }}">
+  <meta name="msapplication-TileImage" content="/images/ms-icon-144x144.png">
+  <meta name="theme-color" content="{{ site.themeColor }}">
+
+  <meta property="og:title" content="{% block ogtitle %}{{ site.title }}{% endblock ogtitle %}">
+  <meta property="og:description" content="{% block ogdesc %}{{ site.description }}{% endblock ogdesc %}">
+  <meta property="og:url" content="{% block ogurl %}{{ site.url }}{% endblock ogurl %}">
+  <meta property="og:site_name" content="{{ site.title }}">
+  {% if site.image %}
+  <meta property="og:image" content="{% block ogimg %}{{ site.image }}{% endblock ogimg %}">
+  {% endif %}
+  <meta name="twitter:card" content="summary">
+  {% if site.twitterUser %}
+  <meta name="twitter:site" content="{{ site.twitterUser }}">
+  <meta name="twitter:creator" content="{{ site.twitterUser }}">
+  <meta name="twitter:image:alt" content="{% block ogaltimg %}{{ site.title }}{% endblock ogaltimg %}">
+  {% endif %}
+</head>
+
+<body data-spy="scroll" data-target=".bs-docs-sidebar">
+  <nav class="navbar navbar-inverse navbar-fixed-top">
+    <div class="navbar-inner">
+      <div class="container">
+        <button type="button" class="btn btn-navbar" data-toggle="collapse" data-target=".nav-collapse"></button>
+        <a class="brand" href="{{ site.url }}">{{ site.title }}</a>
+        <div class="nav-collapse collapse">
+          <ul class="nav">
+            {% block navbar %}
+            {% set current = page.url | default('/') | stripSlashes %}
+            {% for item in site.zola386Menu %}
+              {% set itemPath = item.path | stripSlashes %}
+              <li class="{% if (itemPath == '' and current == '') or (itemPath != '' and current == itemPath) %}active{% endif %}">
+                <a href="{{ site.url }}/{% if item.path %}{{ item.path }}{% endif %}"><span>{{ item.name }}</span></a>
+              </li>
+            {% endfor %}
+            {% endblock navbar %}
+          </ul>
+        </div>
+      </div>
+    </div>
+  </nav>
+
+  <div class="container navmargin">
+    <header class="jumbotron subhead" id="overview">
+      {% block breadcrumb %}{% endblock breadcrumb %}
+      {% block header %}
+      <div class="page-header">
+        <h1>{{ site.title }} <small>{{ site.description }}</small></h1>
+      </div>
+      {% endblock header %}
+      {% block meta %}{% endblock meta %}
+    </header>
+
+    <div class="row-fluid">
+      <div class="span9 bs-docs-sidebar">
+      {% block main %}
+        {% for post in collections.posts %}
+          {{ macro.post_max(post, site) }}
+        {% endfor %}
+      {% endblock main %}
+      </div>
+
+      <div class="span3 bs-docs-sidebar">
+      {% block sidebar %}
+        <h1>Search</h1>
+        <form class="form-search">
+          <input id="search" type="text" class="input-large search-query">
+        </form>
+        <div class="search-results">
+          <div class="search-results__items"></div>
+        </div>
+        <p></p>
+
+        <h1>{{ site.labels.categories }}</h1>
+        <ul class="nav nav-list bs-docs-sidenav">
+          {% for category in collections.categoryList %}
+            <li><a href="/categories/{{ category | slugify }}/">{{ category }}</a></li>
+          {% endfor %}
+        </ul>
+        <p></p>
+
+        <h1>{{ site.labels.tags }}</h1>
+        <ul class="nav nav-list bs-docs-sidenav">
+          {% for tag in collections.tagList %}
+            <li><a href="/tags/{{ tag | slugify }}/">{{ tag }}</a></li>
+          {% endfor %}
+        </ul>
+      {% endblock sidebar %}
+      </div>
+    </div>
+  </div>
+
+  <footer class="container">
+    <hr class="soften">
+    <p>
+      {{ site.year }} &copy;
+      <a href="{{ site.url }}">{{ site.author }}</a>
+      {% if site.twitterUser or site.linkedinUser or site.githubUser or site.gitlabUser %}
+      |
+      {% endif %}
+      {% if site.twitterUser %}
+      <a href="https://twitter.com/{{ site.twitterUser }}" target="_blank">Twitter</a>
+      {% endif %}
+      {% if site.linkedinUser %}
+      <a href="https://linkedin.com/in/{{ site.linkedinUser }}" target="_blank">Linkedin</a>
+      {% endif %}
+      {% if site.githubUser %}
+      <a href="https://github.com/{{ site.githubUser }}" target="_blank">GitHub</a>
+      {% endif %}
+      {% if site.gitlabUser %}
+      <a href="https://gitlab.com/{{ site.gitlabUser }}" target="_blank">GitLab</a>
+      {% endif %}
+      |
+      Built on <a href="https://www.11ty.dev/" target="_blank">Eleventy</a>
+    </p>
+  </footer>
+
+  <script src="/js/jquery.js"></script>
+  <script src="/js/bootstrap-386.js"></script>
+  <script src="/js/bootstrap-transition.js"></script>
+  <script src="/js/bootstrap-alert.js"></script>
+  <script src="/js/bootstrap-modal.js"></script>
+  <script src="/js/bootstrap-dropdown.js"></script>
+  <script src="/js/bootstrap-scrollspy.js"></script>
+  <script src="/js/bootstrap-tab.js"></script>
+  <script src="/js/bootstrap-tooltip.js"></script>
+  <script src="/js/bootstrap-popover.js"></script>
+  <script src="/js/bootstrap-button.js"></script>
+  <script src="/js/bootstrap-collapse.js"></script>
+  <script src="/js/bootstrap-carousel.js"></script>
+  <script src="/js/bootstrap-typeahead.js"></script>
+  <script src="/js/bootstrap-affix.js"></script>
+  <script src="/js/zola.386.js"></script>
+  <script src="/js/search.js"></script>
+
+  {% if site.hasSearch %}
+  <script src="/pagefind/pagefind.js"></script>
+  {% endif %}
+</body>
+</html>

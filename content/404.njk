@@ -1,0 +1,33 @@
+---
+permalink: /404.html
+eleventyExcludeFromCollections: true
+---
+{% extends "layouts/base.njk" %}
+
+{% block title %}{{ site.title }} - 404{% endblock title %}
+
+{% block navbar %}
+{% for item in site.zola386Menu %}
+<li>
+  <a href="/{% if item.path %}{{ item.path }}{% endif %}"><span>{{ item.name }}</span></a>
+</li>
+{% endfor %}
+{% endblock navbar %}
+
+{% block header %}
+<div class="alert alert-error navmargin">
+  <h1>404 - Not found</h1>
+</div>
+{% endblock header %}
+
+{% block main %}
+<p>
+  The page you requested was not found.<br>
+  You can try to find it by browsing the menus.
+</p>
+<p>
+  <a href="/" class="btn btn-info" role="button">Home</a>
+  <a href="/categories/" class="btn btn-info" role="button">Categories</a>
+  <a href="/tags/" class="btn btn-info" role="button">Tags</a>
+</p>
+{% endblock main %}
